@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """Starts a Flask web application ( api for AirBnB_clone_v3 )"""
 
-from api.v1.views import app_views
 from models import storage
 from flask import Flask
 from os import getenv
 from flask import jsonify
+from api.v1.views import app_views
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
