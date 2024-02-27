@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" starts a Flask web application ( api for AirBnB_clone_v3 ) """
+"""Starts a Flask web application ( api for AirBnB_clone_v3 )"""
 
 from api.v1.views import app_views
 from models import storage
