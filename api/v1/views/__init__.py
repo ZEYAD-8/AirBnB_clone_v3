@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-""" 
-Defines the blueprint views for the API 
+"""
+Defines the blueprint views for the API
 """
 
 from flask import Blueprint

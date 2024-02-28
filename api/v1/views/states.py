@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-""" 
-Handles all state routes in the API 
+"""
+Handles all state routes in the API
 """
 
 from flask import jsonify, abort, make_response, request

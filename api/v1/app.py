@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Starts a Flask web application 
+"""Starts a Flask web application
 -> An API for AirBnB_clone
 """
 
