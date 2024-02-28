@@ -30,7 +30,7 @@ def create_state():
 
     created = State(**state_dict)
     created.save()
-    return make_response(jsonify(created.to_dict()), 200)
+    return jsonify(created.to_dict()), 200
 
 
 @app_views.route('/states/<id>', methods=["GET"], strict_slashes=False)
