@@ -66,9 +66,6 @@ def modify_state(id):
     if not state:
         return abort(404)
 
-    if "name" not in state_dict:
-        return make_response(jsonify("Missing name"), 400)
-
     for key, value in state_dict.items():
         if key in ["id", "created_at", "updated_at"]:
             continue
