@@ -1,1 +1,6 @@
 __pycache__
+.gitignore
+test_*
+file.json
+documentation.py
+100-dump.sql
