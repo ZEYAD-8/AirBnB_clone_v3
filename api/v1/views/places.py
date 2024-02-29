@@ -85,7 +85,7 @@ def modify_place(id):
     except Exception:
         return make_response(jsonify("Not a JSON"), 400)
 
-    place = storage.get(City, id)
+    place = storage.get(Place, id)
     if not place:
         return abort(404)
 
