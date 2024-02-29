@@ -27,7 +27,7 @@ def create_user():
 
     if "email" not in user_dict:
         return make_response(jsonify("Missing email"), 400)
-    
+
     if "password" not in user_dict:
         return make_response(jsonify("Missing password"), 400)
 
