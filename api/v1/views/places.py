@@ -7,6 +7,7 @@ from flask import jsonify, abort, make_response, request
 from models.place import Place
 from models.city import City
 from models.user import User
+from models.state import State
 from models import storage
 from api.v1.views import app_views
 
@@ -96,3 +97,83 @@ def modify_place(id):
 
     place.save()
     return make_response(jsonify(place.to_dict()), 200)
+
+
+@app_views.route('/places_search', methods=["POST"], strict_slashes=False)
+def places_search():
+    """retrieves all Place objects depending on the body of the request"""
+    try:
+        search_dict = request.get_json()
+    except Exception:
+        return make_response(jsonify("Not a JSON"), 400)
+
+    cities_to_search = list()
+
+    # retrieve cities specified in search dict (direct or each city in a state)
+    no_states = False
+    if "states" in search_dict:
+        for state_id in search_dict["states"]:
+            state = storage.get(State, state_id)
+            if state is None:
+                continue
+            cities_to_search += state.cities
+    else:
+        no_states = True
+
+    no_cities = False
+    if "cities" in search_dict:
+        for city_id in search_dict["cities"]:
+            city = storage.get(City, city_id)
+            if city is None:
+                continue
+            cities_to_search.append(city)
+    else:
+        no_cities = True
+
+    # keep only unique cities
+    cities_ids = set()
+    cities = list()
+    for city in cities_to_search:
+        if city.id not in cities_ids:
+            cities_ids.update(city_id)
+            cities.append(city)
+
+    # retrieve all places in the cities so far
+    places = []
+    for city in cities:
+        places += city.places
+
+    # if no amenities filter, return all the places found
+    if "amenities" not in search_dict:
+        places = [place.to_dict() for place in places]
+        return jsonify(places), 200
+
+    # if amenities filter exists and --
+    elif no_states and no_cities:
+        # work on all the places that exists
+        places = storage.all(Place).values()
+
+    # filter places that doesn't have all the amenities mentioned
+    filtered_places = []
+    for place in places:
+        valid = True
+        amenities = place.amenities
+
+        for amenity_id in search_dict["amenities"]:
+            found = False
+            for amenity in amenities:
+                if amenity.id == amenity_id:
+                    found = True
+                    break
+            if not found:
+                valid = False
+                break
+
+        if not valid:
+            continue
+
+        filtered_places.append(place)
+
+    # return
+    filtered_places = [place.to_dict() for place in filtered_places]
+    return jsonify(filtered_places), 200
