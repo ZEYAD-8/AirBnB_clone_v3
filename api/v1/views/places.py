@@ -144,12 +144,12 @@ def places_search():
         places += city.places
 
     # if no filters, return all the places found
+    if no_states and no_cities:
+        places = storage.all(Place).values()
+
     if "amenities" not in search_dict:
         places = [place.to_dict() for place in places]
         return jsonify(places), 200
-
-    if no_states and no_cities:
-        places = storage.all(Place).values()
 
     # filter places that doesn't have all the amenities mentioned
     filtered_places = []
