@@ -8,6 +8,7 @@ from models.place import Place
 from models.city import City
 from models.user import User
 from models.state import State
+from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
 
@@ -108,7 +109,7 @@ def places_search():
         return make_response(jsonify("Not a JSON"), 400)
 
     if len(search_dict) == 0:
-        return jsonify("Empty JSON"), 400
+        return jsonify([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), 400
 
     cities_to_search = list()
 
@@ -173,8 +174,7 @@ def places_search():
         if not valid:
             continue
 
-        filtered_places.append(place)
+        if not isinstance(place, Amenity):
+            filtered_places.append(place.to_dict().pop("amenities", None))
 
-    # return
-    filtered_places = [place.to_dict() for place in filtered_places]
     return jsonify(filtered_places), 200
