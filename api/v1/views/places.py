@@ -107,8 +107,8 @@ def places_search():
     except Exception:
         return make_response(jsonify("Not a JSON"), 400)
 
-    if "states" not in search_dict or \
-        "cities" not in search_dict or \
+    if "states" not in search_dict and \
+        "cities" not in search_dict and \
             "amenities" not in search_dict:
         abort(400)
 
