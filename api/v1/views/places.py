@@ -107,16 +107,14 @@ def places_search():
     except Exception:
         return make_response(jsonify("Not a JSON"), 400)
 
-    if "states" not in search_dict and \
-        "cities" not in search_dict and \
-            "amenities" not in search_dict:
-        abort(400)
+    if len(search_dict) == 0:
+        return jsonify("Empty JSON"), 400
 
     cities_to_search = list()
 
     # retrieve cities specified in search dict (direct or each city in a state)
     no_states = False
-    if search_dict["states"] != 0:
+    if "states" in search_dict and len(search_dict["states"]) != 0:
         for state_id in search_dict["states"]:
             state = storage.get(State, state_id)
             if state is None:
@@ -126,7 +124,7 @@ def places_search():
         no_states = True
 
     no_cities = False
-    if search_dict["cities"] != 0:
+    if "cities" in search_dict and len(search_dict["cities"]) != 0:
         for city_id in search_dict["cities"]:
             city = storage.get(City, city_id)
             if city is None:
@@ -140,7 +138,7 @@ def places_search():
     cities = list()
     for city in cities_to_search:
         if city.id not in cities_ids:
-            cities_ids.update(city_id)
+            cities_ids.update(city.id)
             cities.append(city)
 
     # retrieve all places in the cities so far
@@ -152,7 +150,7 @@ def places_search():
         places = storage.all(Place).values()
 
     # if no amenities filter, return the places found
-    if len(search_dict["amenities"]) == 0:
+    if "amenities" not in search_dict or len(search_dict["amenities"]) == 0:
         places = [place.to_dict() for place in places]
         return jsonify(places), 200
 
